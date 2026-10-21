@@ -31,6 +31,14 @@ def get_fixtures(league_id: int, season: str) -> list[dict]:
     resp.raise_for_status()
     data = resp.json()
 
+    # API-Football reports errors (rate limits, bad params, etc.) as HTTP 200
+    # with an "errors" object in the body, not as an HTTP error status - so
+    # raise_for_status() alone won't catch them. Without this check, a
+    # rate-limited call silently looks identical to "no fixtures this date".
+    errors = data.get("errors")
+    if errors:
+        raise RuntimeError(f"API-Football returned errors for league={league_id} season={season}: {errors}")
+
     fixtures = []
     for item in data.get("response", []):
         fixture = item.get("fixture", {})

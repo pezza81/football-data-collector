@@ -31,7 +31,9 @@ SPORTMONKS_BASE_URL = "https://api.sportmonks.com/v3/football"
 OPEN_METEO_ARCHIVE_URL = "https://archive-api.open-meteo.com/v1/archive"
 
 # --- Storage ---
-DB_PATH = Path(__file__).parent / "shared_data.db"
+# COLLECTOR_DB_PATH lets a caller (e.g. the betting engine's cloud pipeline) point the collector at
+# its own copy of the database; unset, it is shared_data.db next to this file, as before.
+DB_PATH = Path(os.environ.get("COLLECTOR_DB_PATH") or (Path(__file__).parent / "shared_data.db"))
 
 # --- Your 7 leagues: API-Football league IDs ---
 # These are API-Football's standard league IDs - double check against

@@ -3,6 +3,7 @@ SQLite helpers for the shared match-keyed store.
 """
 
 import sqlite3
+from pathlib import Path
 from datetime import datetime, timezone
 from config import DB_PATH
 
@@ -15,7 +16,7 @@ def get_connection():
 
 def init_db():
     conn = get_connection()
-    with open("schema.sql") as f:
+    with open(Path(__file__).parent / "schema.sql") as f:
         conn.executescript(f.read())
     conn.commit()
     conn.close()
